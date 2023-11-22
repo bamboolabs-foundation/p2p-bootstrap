@@ -1,0 +1,71 @@
+[package]
+name = "p2p-bootstrap"
+authors = ["Aditya Kresna <aditya.kresna@outlook.co.id>"]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { version = "1.0.75", features = ["backtrace"] }
+clap = { version = "3.2.25", features = [
+    "backtrace",
+    "cargo",
+    "derive",
+    "env",
+    "regex",
+    "terminal_size",
+    "unicode",
+    "wrap_help",
+    "yaml",
+] }
+futures = { version = "0.3.29", features = ["io-compat", "write-all-vectored"] }
+futures-timer = "3.0.2"
+hex = { version = "0.4.3", features = ["serde"] }
+libp2p = { version = "0.53.1", features = [
+    "autonat",
+    "cbor",
+    "dcutr",
+    "dns",
+    "ed25519",
+    "floodsub",
+    "gossipsub",
+    "identify",
+    "json",
+    "kad",
+    "mdns",
+    "memory-connection-limits",
+    "metrics",
+    "noise",
+    "ping",
+    "pnet",
+    "quic",
+    "relay",
+    "request-response",
+    "rsa",
+    "serde",
+    "tcp",
+    "tls",
+    "tokio",
+    "upnp",
+    "websocket",
+    "yamux",
+    "macros",
+] }
+mimalloc = { version = "0.1.39", features = ["local_dynamic_tls", "override", "secure"] }
+openssl = { version = "0.10.59", features = ["vendored"] }
+regex = { version = "1.10.2", features = ["logging", "pattern"] }
+serde = { version = "1.0.192", features = ["derive"] }
+tokio = { version = "1.34.0", features = ["full"] }
+toml = { version = "0.8.8", features = ["indexmap", "preserve_order"] }
+zbus = { version = "3.14.1", features = [
+    "chrono",
+    "gvariant",
+    "tokio",
+    "tokio-vsock",
+    "url",
+    "uuid",
+    "xml",
+] }
+zsn-logging = { git = "https://github.com/bamboolabs-foundation/zsn-common-lib", version = "0.1.2", features = [
+    "std",
+    "main",
+] }
