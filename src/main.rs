@@ -12,9 +12,10 @@ async fn main() -> Result<()> {
     zsn_logging::init();
 
     let cli::CLIArgs {
+        join_ipfs,
         port,
         secret_key: keypair,
     } = <cli::CLIArgs as clap::Parser>::parse();
 
-    behaviours::SwarmService::create(keypair, port)?.run().await
+    behaviours::SwarmService::create(keypair, port, join_ipfs)?.run().await
 }

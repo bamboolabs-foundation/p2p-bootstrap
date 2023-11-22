@@ -2,6 +2,9 @@
 #[derive(clap::Parser)]
 #[clap(author, version)]
 pub(crate) struct CLIArgs {
+    /// Join global IPFS network
+    #[clap(long, short, action, default_value_t = false)]
+    pub(crate) join_ipfs: bool,
     /// TCP & UDP Port
     #[clap(long, short, default_value_t = 4011)]
     pub(crate) port: u16,

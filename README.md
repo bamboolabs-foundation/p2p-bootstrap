@@ -16,7 +16,7 @@ One can simply find out how with:
 
 ```bash
 > p2p-bootstrap --help
-p2p-bootstrap 0.1.0
+p2p-bootstrap 0.1.1
 Aditya Kresna <aditya.kresna@outlook.co.id>
 
 USAGE:
@@ -24,6 +24,7 @@ USAGE:
 
 OPTIONS:
     -h, --help                       Print help information
+    -j, --join-ipfs                  Join global IPFS network
     -p, --port <PORT>                TCP & UDP Port [default: 4011]
     -s, --secret-key <SECRET_KEY>    Ed25519 Secret Key Bytes in hexadecimal [default: {RANDOM}]
     -V, --version                    Print version information

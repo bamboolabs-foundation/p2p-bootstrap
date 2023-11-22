@@ -17,7 +17,7 @@ impl BootstrapBehaviour {
     ];
     const PROTOCOL_NAME: &'static str = "/ipsn/1.0.0";
 
-    fn create(keypair: &libp2p::identity::Keypair) -> Self {
+    fn create(keypair: &libp2p::identity::Keypair, join_ipfs: bool) -> Self {
         let public_key = keypair.public();
         let peer_id = public_key.to_peer_id();
 
@@ -36,13 +36,15 @@ impl BootstrapBehaviour {
             let kademlia_store = libp2p::kad::store::MemoryStore::new(peer_id);
             let mut kademlia = libp2p::kad::Behaviour::new(peer_id, kademlia_store);
 
-            for id in Self::PERMANENT_BOOTNODE_IDENTITIES {
-                let peer_id = <libp2p::PeerId as core::str::FromStr>::from_str(id).unwrap();
+            if join_ipfs {
+                for id in Self::PERMANENT_BOOTNODE_IDENTITIES {
+                    let peer_id = <libp2p::PeerId as core::str::FromStr>::from_str(id).unwrap();
 
-                kademlia.add_address(&peer_id, bootnode_dns.clone());
+                    kademlia.add_address(&peer_id, bootnode_dns.clone());
+                }
+
+                kademlia.bootstrap().unwrap();
             }
-
-            kademlia.bootstrap().unwrap();
 
             kademlia
         };
@@ -61,12 +63,13 @@ impl BootstrapBehaviour {
 
 pub(crate) struct SwarmService {
     inner: libp2p::swarm::Swarm<BootstrapBehaviour>,
+    join_ipfs: bool,
 }
 
 impl SwarmService {
     const BOOTSTRAP_INTERVAL: tokio::time::Duration = tokio::time::Duration::from_secs(5 * 60);
 
-    pub(crate) fn create(keypair: libp2p::identity::Keypair, port: u16) -> crate::Result<Self> {
+    pub(crate) fn create(keypair: libp2p::identity::Keypair, port: u16, join_ipfs: bool) -> crate::Result<Self> {
         let mut inner = libp2p::SwarmBuilder::with_existing_identity(keypair)
             .with_tokio()
             .with_tcp(
@@ -76,7 +79,7 @@ impl SwarmService {
             )?
             .with_quic()
             .with_dns()?
-            .with_behaviour(BootstrapBehaviour::create)?
+            .with_behaviour(|keypair_ref| BootstrapBehaviour::create(keypair_ref, join_ipfs))?
             .with_swarm_config(|cfg| cfg.with_idle_connection_timeout(tokio::time::Duration::from_secs(u64::MAX)))
             .build();
         let addr_ipv4_all =
@@ -90,6 +93,7 @@ impl SwarmService {
 
         crate::Result::Ok(Self {
             inner,
+            join_ipfs,
         })
     }
 
@@ -100,8 +104,11 @@ impl SwarmService {
             if let std::task::Poll::Ready(()) = futures::poll!(&mut bootstrap_timer) {
                 bootstrap_timer.reset(Self::BOOTSTRAP_INTERVAL);
                 let network_info = self.inner.network_info();
-                crate::info!("(Re)bootstrapping Swarm with {network_info:#?}");
-                let _ = self.inner.behaviour_mut().kademlia.bootstrap();
+                crate::info!("{network_info:#?}");
+
+                if self.join_ipfs {
+                    let _ = self.inner.behaviour_mut().kademlia.bootstrap();
+                }
             }
 
             let next_event = futures::stream::StreamExt::select_next_some(&mut self.inner).await;
