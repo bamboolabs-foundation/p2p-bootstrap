@@ -16,7 +16,7 @@ One can simply find out how with:
 
 ```bash
 > p2p-bootstrap --help
-p2p-bootstrap 0.1.1
+p2p-bootstrap 0.1.2
 Aditya Kresna <aditya.kresna@outlook.co.id>
 
 USAGE:

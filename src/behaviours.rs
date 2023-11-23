@@ -63,7 +63,6 @@ impl BootstrapBehaviour {
 
 pub(crate) struct SwarmService {
     inner: libp2p::swarm::Swarm<BootstrapBehaviour>,
-    join_ipfs: bool,
 }
 
 impl SwarmService {
@@ -93,7 +92,6 @@ impl SwarmService {
 
         crate::Result::Ok(Self {
             inner,
-            join_ipfs,
         })
     }
 
@@ -104,11 +102,8 @@ impl SwarmService {
             if let std::task::Poll::Ready(()) = futures::poll!(&mut bootstrap_timer) {
                 bootstrap_timer.reset(Self::BOOTSTRAP_INTERVAL);
                 let network_info = self.inner.network_info();
+                let _ = self.inner.behaviour_mut().kademlia.bootstrap();
                 crate::info!("{network_info:#?}");
-
-                if self.join_ipfs {
-                    let _ = self.inner.behaviour_mut().kademlia.bootstrap();
-                }
             }
 
             let next_event = futures::stream::StreamExt::select_next_some(&mut self.inner).await;

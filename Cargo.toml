@@ -1,7 +1,7 @@
 [package]
 name = "p2p-bootstrap"
 authors = ["Aditya Kresna <aditya.kresna@outlook.co.id>"]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 [dependencies]
