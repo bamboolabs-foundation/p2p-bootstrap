@@ -1,11 +1,10 @@
 [env]
-AR = "llvm-ar-16"                                             # for C/C++ deps
 AR_aarch64-linux-android = "llvm-ar"                          # ndk-25c/api-28
 AR_x86_64-linux-android = "llvm-ar"                           # ndk-25c/api-28
-CC = "clang-16"                                               # for C/C++ deps
+CC = "clang-17"                                               # for C/C++ deps
 CC_aarch64-linux-android = "aarch64-linux-android28-clang"    # ndk-25c/api-28
 CC_x86_64-linux-android = "aarch64-linux-android28-clang"     # ndk-25c/api-28
-CXX = "clang-16"                                              # for C/C++ deps
+CXX = "clang-17"                                              # for C/C++ deps
 CXX_aarch64-linux-android = "aarch64-linux-android28-clang++" # ndk-25c/api-28
 CXX_x86_64-linux-android = "aarch64-linux-android28-clang++"  # ndk-25c/api-28
 
