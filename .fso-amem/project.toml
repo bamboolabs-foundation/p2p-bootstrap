@@ -1,0 +1,6 @@
+[project]
+name = "bamboo-p2p-bootstrap"
+slug = "bamboo-p2p-bootstrap"
+
+[amem]
+server = "https://amem.flusci.org"
